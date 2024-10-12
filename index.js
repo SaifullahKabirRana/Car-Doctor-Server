@@ -41,7 +41,7 @@ async function run() {
       const query = { _id: new ObjectId(id) }
 
       const options = {
-        projection: { title: 1, price: 1, service_id: 1, img:1 }
+        projection: { title: 1, price: 1, service_id: 1, img: 1 }
       };
       const result = await serviceCollection.findOne(query, options);
       res.send(result);
@@ -51,14 +51,13 @@ async function run() {
     // checkout
 
     app.get('/checkout', async (req, res) => {
-      console.log(req.query.email);
       let query = {};
-      if(req.query?.email){
-        query = {email: req.query.email};
+      if (req.query?.email) {
+        query = { email: req.query.email };
       }
       const result = await checkoutCollection.find(query).toArray();
       res.send(result);
-      
+
     })
 
     app.post('/checkout', async (req, res) => {
@@ -66,7 +65,14 @@ async function run() {
       console.log(checkout);
       const result = await checkoutCollection.insertOne(checkout);
       res.send(result);
-      
+
+    })
+
+    app.delete('/checkout/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await checkoutCollection.deleteOne(query);
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
