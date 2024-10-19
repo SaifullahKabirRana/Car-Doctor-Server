@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
@@ -28,7 +29,17 @@ async function run() {
 
     const serviceCollection = client.db('carDoctor').collection('services');
     const checkoutCollection = client.db('carDoctor').collection('checkout')
+    
+    // auth related api 
+    app.post('/jwt', async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const token = jwt.sign(user, 'secret', {expiresIn: '1h'})
+      res.send(token);
+      
+    })
 
+    // services related api
     app.get('/services', async (req, res) => {
       const cursor = serviceCollection.find();
       const result = await cursor.toArray();
@@ -66,6 +77,22 @@ async function run() {
       const result = await checkoutCollection.insertOne(checkout);
       res.send(result);
 
+    })
+
+    app.patch('/checkout/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const updatedBookings = req.body;
+      console.log(updatedBookings);
+
+      const updateDoc = {
+        $set: {
+          status: updatedBookings.status
+        },
+      }
+      const result = await checkoutCollection.updateOne(filter, updateDoc);
+      res.send(result);
+      
     })
 
     app.delete('/checkout/:id', async (req, res) => {
