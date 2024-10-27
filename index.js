@@ -73,10 +73,19 @@ async function run() {
       res
         .cookie('token', token, {
           httpOnly: true,
-          secure: false
+          secure: true,
+          sameSite: 'none'
         })
         .send({ success: true });
 
+    })
+
+    app.post('/logout', async (req, res) => {
+      const user = req.body;
+      console.log('logging out', user);
+      res
+        .clearCookie('token', { maxAge: 0 })
+        .send({ success: true })
     })
 
     // services related api
@@ -103,8 +112,8 @@ async function run() {
     app.get('/checkout', logger, verifyToken, async (req, res) => {
       // console.log('tik tok token:', req.cookies.token);
       console.log('user in the valid token:', req.user);
-      if(req.query.email !== req.user.email){
-        return res.status(403).send({message: 'forbidden access'})
+      if (req.query.email !== req.user.email) {
+        return res.status(403).send({ message: 'forbidden access' })
       }
 
       let query = {};
