@@ -35,7 +35,7 @@ const logger = async (req, res, next) => {
 }
 
 const verifyToken = async (req, res, next) => {
-  const token = req.cookies?.token;
+  const token = req?.cookies?.token;
   console.log('value of token in middleware', token);
   if (!token) {
     return res.status(401).send({ message: 'unauthorized access' });
@@ -49,7 +49,7 @@ const verifyToken = async (req, res, next) => {
     // if token is valid then it would be decoded
     console.log('value in the token:', decoded);
     req.user = decoded;
-    next()
+    next();
   })
 
 }

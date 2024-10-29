@@ -21,3 +21,13 @@
    * 4. from client side: axios withCredentials: true
    * 5. cors setup origin and credentials: true
    */
+
+
+  /**
+   * -----------------------------
+   *    For secure api calls
+   * -----------------------------
+   * 1. install cookie parser and use it as a middleware
+   * 2. req.cookies
+   * 3. on the client side: make api call using axios withCredentials: true (or credentials: 'include' while using fetch)
+   */
